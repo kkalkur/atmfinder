@@ -12,6 +12,7 @@ dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
 .settings
+.mvn/wrapper
 
 
 ### Intellij ###
