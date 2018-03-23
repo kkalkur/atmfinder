@@ -1,31 +1,105 @@
 # Atm Finder
 
-A spring boot project with basic spring security in place. which consumes a rest-api, and presents a neat UI with output of the rest api encapsulated in a Datatable using jquery.
+A spring boot project with basic spring security in place. The rest API is exposed by cosuming a  External rest-api. 
+The API is consumed by UI built on basic Jquery 
 
-How it was Implemented ?
+## Different REST End point Exposed in Application
 
-Utilized spring initializer project to generate the basic code structure and architecture of the application.
+*  list all the ATM without any Filter
+
+`http://localhost:8080/ATMlocations/`
+
+Sample PayLoad will be 
+
+```
+{
+"list": [
+{
+"address": {
+"street": "Osdorpplein",
+"housenumber": "469",
+"postalcode": "1068 SZ",
+"city": "Amsterdam",
+"geoLocation": {
+"lat": "52.358823",
+"lng": "4.802086"
+}
+},
+"distance": 0,
+"type": "ING"
+}
+
+```
+
+*  Search ATMS for a given city
+
+Example
+
+```
+http://localhost:8080/ATMlocations/search?city=Amsterdam
+```
+Sample payload will be 
+
+```
+{
+"list": [
+{
+"address": {
+"street": "Buikslotermeerplein",
+"housenumber": "426",
+"postalcode": "1025 WP",
+"city": "Amsterdam",
+"geoLocation": {
+"lat": "52.397468",
+"lng": "4.94107"
+}
+},
+"distance": 0,
+"type": "ING"
+}
+
+```
+## Overall Architecture 
+
+
+Utilized spring initializer project to generate the Skeleton
+
 - Added thymeleaf templating engine, with basic spring security starter and spring boot jersey dependencies.
 - Configured Basic Security, Resttemplate calls with by-passing ssl for consuming ING web service ( https://www.ing.nl/api/locator/atms/ )
-- The ING web-service provides a malformed json response, containing a few garbage characters in the beginning, this was adjusted in the api and proper json response is parsed to populate Data Transfer Object's.
 - jQuery and Datatables.js is utilized along with Bootstrap.css for implementing UI elements.
 
-How is the Architecture Designed ?
+## How is the Architecture Designed  and components are layered ?
+![alt text](Sequence-Diagram.jpg)
 
-A basic spring MVC design : Request Callstack : Controller -> Service -> Repository and vice a versa for response. with a layer of application level security exposing all service / resource calls as authenticated.
+I have MVC Pattern with Domian Driven Design Concept
 
-Controllers :
-AtmController.java : exposes 2 rest api's 
-- /locations : Lists all the atm addresses exposed by ING atm locator service as a proper JSON respone.
-- /locations/{city} : Filters and lists all locations based on provided city as a proper JSON response.
+### Application Service :
+Spring Rest Controler acts a Application Service (AtmApplicationService.java)
+This  exposes 2 rest api's as explained Above
 
-Services :
-AtmLocator.java : implements business logic behind the exposed web services utilizing output from repository.
+This will be calling multiple Domain Services depending on the Use case . In our case we have a simple get we call and no orchestarion involved.
 
-Repositories :
-AtmDataPopulator.java : utilizes spring rest-template for consuming the ING ATM locator service.
+#### Domain Services :
+AtmDomainServiceImpl : implements business logic behind the exposed web services utilizing output from repository.
+This services is only responsible ATM Aggreagte .
 
-User interface :
+#### Repositories :
+AtmDataReposiroty : This utilizes spring rest-template for consuming the ING ATM locator service. This will abstact the external API call from the domain service . 
+#### Other Design Principels Used 
+Program for Interface : All the layers depending on the interface and dependcies are injected using the Spring Dependecy Injection
+
+#### Areas of Improved if i had time 
+Resilency and Exception Handling 
+
+* Circuit braker while callign external service this will take care of time out issues and external service not responding 
+* Added pagination for Search REST end point so that we can fetch all the ATM Location at one go . This will avoid any huge payload being sent over the network 
+* Added proper code for Error handling and do some validation for input parameter
+* Implemeted Swagger for API documentation 
+ 
+
+
+
+#### User interface :
 
 - /home OR / : Home page.
 - /login     : Login page. uses in-memory auth : Credentials as:
@@ -38,7 +112,6 @@ Tools used :
 - Spring boot
 - Tomcat 7
 
-This module contains a  camel spring boot dependency, and does start a camel server , but is not being utilized as I have never worked on camel before and was not successful routing the service calls via camel.
 
 How to Run ?
 maven should be installed.
