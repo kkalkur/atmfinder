@@ -77,18 +77,20 @@ I have MVC Pattern with Domian Driven Design Concept
 Spring Rest Controler acts a Application Service (AtmApplicationService.java)
 This  exposes 2 rest api's as explained Above
 
-This will be calling multiple Domain Services depending on the Use case . In our case we have a simple get we call and no orchestarion involved.
+This will be calling multiple Domain Services depending on the Use case . In our case we have a simple get we call and no orchestarion involved. AtmApplicationService will call AtmDomainServices
 
 #### Domain Services :
-AtmDomainServiceImpl : implements business logic behind the exposed web services utilizing output from repository.
-This services is only responsible ATM Aggreagte .
+AtmDomainServiceImpl : This implements business logic  required for the business method. In this it simply calles Repository which will abstact any call to the DB or External service .
+
 
 #### Repositories :
-AtmDataReposiroty : This utilizes spring rest-template for consuming the ING ATM locator service. This will abstact the external API call from the domain service . 
+AtmDataReposiroty : 
+This repository is only responsible ATM Aggreagte . This has a clear cut boundary compare to other Aggregates in the domain model.
+This utilizes spring rest-template for consuming the ING ATM locator service. This will abstact the external API call from the domain service . 
 #### Other Design Principels Used 
-Program for Interface : All the layers depending on the interface and dependcies are injected using the Spring Dependecy Injection
+Program for Interface : All the layers depending on the interface and dependcies are injected using the Spring Dependecy Injection.
 
-#### Areas of Improved if i had time 
+#### Areas of Improvement  if i had time 
 Resilency and Exception Handling 
 
 * Circuit braker while callign external service this will take care of time out issues and external service not responding 
