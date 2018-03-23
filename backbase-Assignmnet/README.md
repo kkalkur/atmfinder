@@ -71,32 +71,34 @@ Utilized spring initializer project to generate the Skeleton
 ## How is the Architecture Designed  and components are layered ?
 ![alt text](Sequence-Diagram.jpg)
 
-I have MVC Pattern with Domian Driven Design Concept
+I have used MVC Pattern with Domain Driven Design Concept
 
-### Application Service :
-Spring Rest Controler acts a Application Service (AtmApplicationService.java)
-This  exposes 2 rest api's as explained Above
+### Application Service:
+Spring Rest Controller acts as an Application Service (AtmApplicationService.java)
+This exposes 2 rest Api's as explained Above
 
-This will be calling multiple Domain Services depending on the Use case . In our case we have a simple get we call and no orchestarion involved. AtmApplicationService will call AtmDomainServices
+This will be calling multiple Domain Services depending on the Use case. In our case we have a simple get we call and no orchestration involved. AtmApplicationService will call AtmDomainServices
 
-#### Domain Services :
-AtmDomainServiceImpl : This implements business logic  required for the business method. In this it simply calles Repository which will abstact any call to the DB or External service .
+#### Domain Services:
+AtmDomainServiceImpl : This implements business logic  required for the Retrieving the List of ATM method. In this it simply calls Repository which will abstract any call to the DB or External service.
 
 
-#### Repositories :
+#### Repositories:
 AtmDataReposiroty : 
-This repository is only responsible ATM Aggreagte . This has a clear cut boundary compare to other Aggregates in the domain model.
-This utilizes spring rest-template for consuming the ING ATM locator service. This will abstact the external API call from the domain service . 
-#### Other Design Principels Used 
-Program for Interface : All the layers depending on the interface and dependcies are injected using the Spring Dependecy Injection.
+This repository is only responsible ATM Aggregate. This has a clear-cut boundary compare to other Aggregates in the domain model.
+This utilizes spring rest-template for consuming the ING ATM locator service. This will abstract the external API call from the domain service. 
+#### Other Design Principles Used 
+Program for Interface: All the layers depending on the interface and decencies are injected using the Spring Dependency Injection.
+SRP : Every Layer has single responsibility and do only one thing.
 
-#### Areas of Improvement  if i had time 
-Resilency and Exception Handling 
+#### Areas of Improvement if I had time 
+Resiliency and Exception Handling 
 
-* Circuit braker while callign external service this will take care of time out issues and external service not responding 
-* Added pagination for Search REST end point so that we can fetch all the ATM Location at one go . This will avoid any huge payload being sent over the network 
+* Circuit breaker pattern can be while calling the external service this will take care of time out issues and external service not responding 
+* Added pagination for Search REST end point so that we can fetch all the ATM Location at one go. This will avoid any huge payload being sent over the network 
 * Added proper code for Error handling and do some validation for input parameter
-* Implemeted Swagger for API documentation 
+* Implemented Swagger for API documentation
+
  
 
 
@@ -110,7 +112,7 @@ Resilency and Exception Handling
 
 Tools used :
 - Maven
-- JDK 7
+- JDK 8
 - Spring boot
 - Tomcat 7
 
